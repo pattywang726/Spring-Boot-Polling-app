@@ -15,16 +15,14 @@ import java.util.List;
 public interface VoteRepository extends JpaRepository<Vote, Long> {
 
     // custom query with @Query annotation --> MySQL?
-    @Query("SELECT NEW com.example.polls.model.ChoiceVoteCount(v.choice_id," +
-            " count(v.id)) FROM Vote v WHERE v.poll.id in :pollIds GROUP BY " +
-            "v.choice.id")
+    @Query("SELECT NEW com.example.polls.model.ChoiceVoteCount(v.choice.id, count(v.id)) " +
+            "FROM Vote v WHERE v.poll.id in :pollIds GROUP BY v.choice.id")
     // For each Poll in the list, just count the how many votes given to
     // every Choice of each Poll.
     List<ChoiceVoteCount> countByPollIdInGroupByChoiceId(@Param("pollIds") List<Long> pollIds);
 
-    @Query("SELECT NEW com.example.polls.model.ChoiceVoteCount(v.choice_id," +
-            " count(v.id)) FROM Vote v WHERE v.poll.id = :pollId GROUP BY " +
-            "v.choice.id")
+    @Query("SELECT NEW com.example.polls.model.ChoiceVoteCount(v.choice.id, count(v.id)) " +
+            "FROM Vote v WHERE v.poll.id = :pollId GROUP BY v.choice.id")
     List<ChoiceVoteCount> countByPollIdGroupByChoiceId(@Param("pollId") Long pollId);
 
     @Query("SELECT v FROM Vote v WHERE v.user.id = :userId and " +
@@ -37,7 +35,7 @@ public interface VoteRepository extends JpaRepository<Vote, Long> {
     Vote findByUserIdAndPollId(@Param("userId") Long userId,
                                @Param("pollId") Long pollId);
 
-    @Query("SELECT COUNT(v.id) from VOTE v WHERE v.user.id = :userId")
+    @Query("SELECT COUNT(v.id) from Vote v WHERE v.user.id = :userId")
     long countByUserId(@Param("userId") Long userId);
 
     //Find the list of Poll voted by the User.

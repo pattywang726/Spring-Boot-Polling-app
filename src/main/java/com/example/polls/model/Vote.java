@@ -1,15 +1,16 @@
 package com.example.polls.model;
 
+import com.example.polls.model.audit.DateAudit;
 import javax.persistence.*;
 
 @Entity
 @Table(name = "votes", uniqueConstraints = {
         @UniqueConstraint(columnNames = {
-                "pool_id",
+                "poll_id",
                 "user_id"
         })
 })
-public class Vote {
+public class Vote extends DateAudit{
 
     @Id
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
@@ -20,12 +21,12 @@ public class Vote {
     private Poll poll;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "choice_id", nullable = false)
     private Choice choice;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     public Long getId() {
         return id;

@@ -13,15 +13,10 @@ import com.example.polls.util.AppConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
+@RestController
 @RequestMapping("/api")
 public class UserController {
     @Autowired
@@ -40,7 +35,7 @@ public class UserController {
 
     // Get the currently logged in user.
     @GetMapping("/user/me")
-    @PreAuthorize("hasRole('User')")
+    @PreAuthorize("hasRole('USER')")
     public UserSummary getCurrentUser(@CurrentUser UserPrincipal user) {
         return new UserSummary(user.getId(), user.getUsername(), user.getName());
     }
@@ -53,7 +48,7 @@ public class UserController {
     }
 
     // Check if an email is available for registration.
-    @GetMapping("/user/checkUsernameAvailability")
+    @GetMapping("/user/checkEmailAvailability")
     public UserIdentityAvailability checkEmailAvailability(@RequestParam(value = "email") String email) {
         Boolean isAvailable = !userRepository.existsByEmail(email);
         return new UserIdentityAvailability(isAvailable);
@@ -70,6 +65,7 @@ public class UserController {
         // should be found by voteRepository.
         long pollCount = pollRepository.countByCreatedBy(user.getId());
         long voteCount = voteRepository.countByUserId(user.getId());
+
         UserProfile userProfile = new UserProfile(user.getId(), user.getUsername(), user.getName(),
                user.getCreatedAt(), pollCount, voteCount);
 
@@ -96,5 +92,4 @@ public class UserController {
 
         return pollService.getPollsVotedBy(username, user, page, size);
     }
-
 }

@@ -3,7 +3,9 @@ package com.example.polls;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
+import com.example.polls.controller.*;
 
 import javax.annotation.PostConstruct;
 import java.util.TimeZone;
@@ -23,5 +25,4 @@ public class PollsApplication {
 
 		SpringApplication.run(PollsApplication.class, args);
 	}
-
 }
